@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fdu.mall.dao.ShopMapper">
+    <select id="goodsAll" resultType="com.fdu.mall.model.Product">
+        select goodsId,name,descs,img,price,seller from product
+    </select>
+    <insert id="addGoods">
+        insert into product values (null,#{product.name},#{product.desc},#{product.img},100)
+    </insert>
+
+    <select id="getGoodsInfo" resultType="com.fdu.mall.model.Product">
+        select * from product where id=#{id}
+    </select>
+
+    <update id="updateGoods"  >
+        update product set name=#{name}, img=#{img}, price=#{price}, descs=#{desc}  where goodsId=#{goodsId};
+    </update>
+
+    <delete id="deleteGoods" >
+        delete * from product where id=#{id}
+    </delete>
+    <select id="searchGoods" resultType="com.fdu.mall.model.vo.SearchProductVO">
+        select goodsId ,img,name,price from product where name=#{kekword}
+    </select>
+    <select id="getGoodsInfo_front" resultType="com.fdu.mall.model.vo.GetProductInfoVo">
+        select goodsId,img,name,descs,seller,price from product where goodsId=#{goodsId}
+    </select>
+</mapper>

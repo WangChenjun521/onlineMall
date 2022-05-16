@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fdu.mall.dao.UserMapper">
+    <insert id="insertRegister">
+        insert into user values (null,#{user.username},#{user.nickname},#{user.password},#{user.addressee},#{user.address},#{user.phone},3)
+    </insert>
+
+    <select id="selectAllUsers" resultType="com.fdu.mall.model.User">
+        select * from user
+    </select>
+
+    <select id="selectLogin" resultType="com.fdu.mall.model.User">
+        select * from user where username=#{name} and password=#{psw}
+    </select>
+
+    <select id="selectBalanceByName" resultType="int">
+        select balance from user where username=#{name}
+    </select>
+
+    <update id="updateBalanceByName">
+        update user set balance=#{balance} where username=#{name}
+    </update>
+
+    <select id="selectUserByName" resultType="com.fdu.mall.model.User">
+        select address,phone from user where username=#{name}
+    </select>
+</mapper>

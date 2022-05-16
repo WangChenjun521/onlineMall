@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fdu.mall.dao.CartMapper">
+<!--    <select id="selectCartList" resultType="com.fdu.mall.model.Cart">-->
+<!--        select * from cart where nickname=#{nickname}-->
+<!--    </select>-->
+<!--    <insert id="insertCart">-->
+<!--        insert into cart (`nickname`, `id`, `img`, `name`, `goodsDetailId`, `spec`, `unitPrice`, `goodsNum`) VALUES (#{nickname}, #{id}, #{img}, #{name}, #{goodsDetailId}, #{spec}, #{unitPrice}, #{goodsNum})-->
+<!--    </insert>-->
+<!--    <delete id="deletCart">-->
+<!--        delete from cart where nickname=#{nickname} and id=#{id}-->
+<!--    </delete>-->
+<!--    <update id="changeItemNumInCart">-->
+<!--        update cart set goodsNum=#{goodsNum} where nickname=#{nickname} and id=#{id}-->
+<!--    </update>-->
+    <select id="selectCartList" resultType="com.fdu.mall.model.Cart">
+        select * from cart where username=#{username}
+    </select>
+    <insert id="insertCart">
+        insert into cart values (#{username}, #{goodsId}, #{num}, #{specName}, #{img}, #{name}, #{seller}, #{price})
+    </insert>
+    <delete id="deleteCart">
+        delete from cart where username=#{username} and goodsId=#{goodsId} and specName=#{specName}
+    </delete>
+    <update id="updateCart">
+        update cart set num=#{num} where username=#{username} and goodsId=#{goodsId} and specName=#{specName}
+    </update>
+</mapper>

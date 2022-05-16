@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fdu.mall.dao.CollectionMapper">
+    <select id="addToCollection" resultType="com.fdu.mall.model.Collections">
+        insert into Collections (username,goodsId) values (#{username},#{goodsId})
+    </select>
+    <select id="selectByKey" resultType="com.fdu.mall.model.Collections">
+        select * from Collections where username=#{username} and goodsId=#{goodsId}
+    </select>
+    <delete id="deleteToCollection" >
+        delete from Collections where username=#{username} and goodsId=#{goodsId}
+    </delete>
+
+    <select id="getCollections" resultType="com.fdu.mall.model.Collections">
+        select * from Collections where username = #{username};
+    </select>
+</mapper>

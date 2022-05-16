@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.fdu.mall.dao.OrdersMapper">
+    <select id="OrdersNowAll" resultType="com.fdu.mall.model.Content">
+        select distinct suborders.orderId as orderId, orders.buyer as buyer, suborders.goodsNum as goodsNum from orders, suborders, goods_in_suborders
+        where seller = #{seller} and orders.orderId = suborders.fatherorderId and suborders.orderId = goods_in_suborders.orderId
+    </select>
+    <select id="bs_find_goods" resultType="com.fdu.mall.model.GoodsInSuborders">
+        select * from goods_in_suborders where goods_in_suborders.orderId = #{orderId} and goods_in_suborders.state &lt;&gt; 3
+    </select>
+
+
+    <update id="updateOrder" >
+        update suborders, goods_in_suborders set suborders.amount=suborders.amount-goods_in_suborders.amount where goods_in_suborders.id=#{id} and goods_in_suborders.orderId=suborders.orderId;
+        update goods_in_suborders set name=#{name}, specName=#{specName}, price=#{price}, num=#{num}, amount=#{amount}, goods_in_suborders.state=#{state} where id=#{id};
+        update orders, suborders, goods_in_suborders set orders.state=goods_in_suborders.state, suborders.amount=suborders.amount+goods_in_suborders.amount where goods_in_suborders.id=#{id} and goods_in_suborders.orderId=suborders.orderId and suborders.fatherorderId=orders.orderId;
+        update orders, suborders, goods_in_suborders set goods_in_suborders.state=orders.state where goods_in_suborders.orderId=suborders.orderId and suborders.fatherorderId=orders.orderId;
+    </update>
+
+
+    <delete id="deleteOrder" >
+        update suborders, goods_in_suborders set suborders.amount=suborders.amount-goods_in_suborders.amount where suborders.orderId=#{orderId} and goods_in_suborders.id=#{id};
+        delete from goods_in_suborders where id = #{id};
+        update suborders set goodsNum=goodsNum-1 where suborders.orderId=#{orderId};
+        delete from suborders where goodsNum=0;
+    </delete>
+
+
+    <select id="orderNowSearch" resultType="com.fdu.mall.model.Content">
+        select distinct suborders.orderId as orderId, orders.buyer as buyer, suborders.goodsNum as goodsNum from orders, suborders, goods_in_suborders
+        where seller = #{seller} and goods_in_suborders.name = #{name} and orders.orderId = suborders.fatherorderId and suborders.orderId = goods_in_suborders.orderId
+    </select>
+    <select id="bs_find_goods_by_name" resultType="com.fdu.mall.model.GoodsInSuborders">
+        select * from goods_in_suborders
+        where goods_in_suborders.orderId = #{orderId} and goods_in_suborders.state &lt;&gt; 3 and goods_in_suborders.name = #{name}
+    </select>
+
+
+    <select id="orderHistoryAll" resultType="com.fdu.mall.model.Content">
+        select distinct suborders.orderId as orderId, orders.buyer as buyer, suborders.goodsNum as goodsNum from orders, suborders, goods_in_suborders
+        where seller = #{seller} and orders.orderId = suborders.fatherorderId and suborders.orderId = goods_in_suborders.orderId
+    </select>
+    <select id="bs_find_goods_all" resultType="com.fdu.mall.model.GoodsInSuborders">
+        select * from goods_in_suborders where goods_in_suborders.orderId = #{orderId}
+    </select>
+
+
+    <select id="orderHistorySearch" resultType="com.fdu.mall.model.Content">
+        select distinct suborders.orderId as orderId, orders.buyer as buyer, suborders.goodsNum as goodsNum from orders, suborders, goods_in_suborders
+        where seller = #{seller} and goods_in_suborders.name = #{name} and orders.orderId = suborders.fatherorderId and suborders.orderId = goods_in_suborders.orderId
+    </select>
+    <select id="bs_find_goods_by_name_all" resultType="com.fdu.mall.model.GoodsInSuborders">
+        select * from goods_in_suborders
+        where goods_in_suborders.orderId = #{orderId} and goods_in_suborders.name = #{name}
+    </select>
+
+
+    <select id="getAllStateOrder" resultType="com.fdu.mall.model.Orders">
+        select * from orders where buyer=#{buyer}
+    </select>
+    <select id="findsuborders" resultType="com.fdu.mall.model.Suborders">
+        select * from suborders where fatherorderId=#{fatherorderId}
+    </select>
+    <select id="findgoods" resultType="com.fdu.mall.model.GoodsInSuborders">
+        select * from goods_in_suborders where orderId=#{orderId}
+    </select>
+    <select id="getOrderByState" resultType="com.fdu.mall.model.Orders">
+        select * from orders where buyer=#{buyer} and state=#{state}
+    </select>
+
+
+    <update id="pay" >
+        update orders set state=1 where orderId=#{orderId};
+        update orders, suborders, goods_in_suborders set goods_in_suborders.state=orders.state where goods_in_suborders.orderId=suborders.orderId and suborders.fatherorderId=orders.orderId and orders.orderId=#{orderId};
+    </update>
+
+
+    <update id="editOrderInfo" >
+        update orders set buyer=#{buyer}, phone=#{phone}, address=#{address} where orderId=#{orderId}
+    </update>
+
+
+    <update id="cancelOrder" >
+        update orders set state=4 where orderId = #{orderId};
+        update orders, suborders, goods_in_suborders set goods_in_suborders.state=orders.state where goods_in_suborders.orderId=suborders.orderId and suborders.fatherorderId=orders.orderId and orders.orderId=#{orderId};
+    </update>
+
+
+    <update id="confirmReceive" >
+        update orders set state=3 where orderId = #{orderId};
+        update orders, suborders, goods_in_suborders set goods_in_suborders.state=orders.state where goods_in_suborders.orderId=suborders.orderId and suborders.fatherorderId=orders.orderId and orders.orderId=#{orderId};
+    </update>
+
+
+    <update id="complainOrder" >
+        update orders set state=5, com_reason=#{com_reason} where orderId = #{orderId};
+        update orders, suborders, goods_in_suborders set goods_in_suborders.state=orders.state where goods_in_suborders.orderId=suborders.orderId and suborders.fatherorderId=orders.orderId and orders.orderId=#{orderId};
+    </update>
+
+
+    <select id="find_orders_max" resultType="java.lang.Integer">
+        select max(orderId) from orders
+    </select>
+    <select id="find_suborders_max" resultType="java.lang.Integer">
+        select max(orderId) from suborders
+    </select>
+    <insert id="buyNow">
+        insert into orders (`buyer`, `state`, `amount`, `createtime`, `phone`, `address`) VALUES (#{buyer}, 0, #{price}*#{num}, CURRENT_TIMESTAMP, #{phone}, #{address});
+        insert into suborders (`fatherorderId`, `goodsNum`, `amount`, `seller`) VALUES (#{orders_id_max}+1, 1, #{price}*#{num}, #{seller});
+        insert into goods_in_suborders (`goodsId`, `orderId`, `img`, `name`, `specName`, `price`, `amount`, `num`, `state`) VALUES (#{goodsId}, #{suborders_id_max}+1, #{img}, #{name}, #{specName}, #{price}, #{price}*#{num}, #{num}, 0);
+    </insert>
+
+
+<!--    <update id="dealcomOrder" >-->
+<!--        update orders set state="com_dealed", bcom=null where id=#{id}-->
+<!--    </update>-->
+
+
+<!--    <update id="refundOrder" >-->
+<!--        update orders set state="refunding" where id=#{id}-->
+<!--    </update>-->
+</mapper>

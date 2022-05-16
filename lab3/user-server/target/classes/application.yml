@@ -1,0 +1,27 @@
+######################## common config : ########################
+spring:
+  application:
+    name: user-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/lab2?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+
+#配置服务器tomcat的参数配置
+server:
+  port: 8085
+  servlet:
+    context-path: /
+
+#mybatis的相关配置
+mybatis:
+  #mapper配置文件
+  mapper-locations: classpath:dao/*.xml
+  type-aliases-package: com.fdu.mall.model
+
+#数据库相关日志
+logging:
+  level:
+    com.fdu.mall.dao: debug
+

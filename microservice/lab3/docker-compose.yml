@@ -1,0 +1,143 @@
+version: "3"
+services:
+  eureka-server:
+    restart: always
+    build: eureka-server/
+    ports:
+      - 8761:8761
+    networks:
+      - mynetwork
+  mysql5:
+    build: mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - 3306:3306
+    networks:
+      - mynetwork
+
+  gateway:
+    restart: always
+    depends_on:
+      - eureka-server
+    build: gateway/
+    ports:
+      - 8085:8085
+    networks:
+      - mynetwork
+
+  nginx-vue:
+    restart: always
+    build: nginx_vue/
+    ports:
+      - 8080:8080
+    networks:
+      - mynetwork
+
+  nginx-backstage:
+    restart: always
+    build: nginx_backstage/
+    ports:
+      - 8081:8081
+    networks:
+      - mynetwork
+  
+  # onlinemart-vue:
+  #   restart: always
+  #   build: onlinemart-vue/
+  #   ports:
+  #     - 8080:8080
+  #   networks:
+  #     - mynetwork
+
+  # onlinemart-backstage:
+  #   restart: always
+  #   build: onlinemart-backstage/
+  #   ports:
+  #     - 8081:8081
+  #   networks:
+  #     - mynetwork
+
+  user-service:
+    restart: always
+    depends_on:
+      - gateway
+      - eureka-server
+    build: user-service/
+    ports:
+      - 8090:8090
+    networks:
+      - mynetwork
+      
+  product-service:
+    restart: always
+    depends_on:
+      - gateway
+      - eureka-server
+    build: product-service/
+    ports:
+      - 8100:8100
+    networks:
+      - mynetwork
+
+  cart-service:
+    restart: always
+    depends_on:
+      - gateway
+      - eureka-server
+    build: cart-service/
+    ports:
+      - 8138:8138
+    networks:
+      - mynetwork
+
+  orders-service:
+    restart: always
+    depends_on:
+      - gateway
+      - eureka-server
+    build: orders-service/
+    ports:
+      - 8095:8095
+    networks:
+      - mynetwork
+
+  collections-service:
+    restart: always
+    depends_on:
+      - gateway
+      - eureka-server
+    build: collections-service/
+    ports:
+      - 8105:8105
+    networks:
+      - mynetwork
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    restart: always
+    ports:
+      - 2181:2181
+    networks:
+      - mynetwork
+
+  kafka:
+    image: wurstmeister/kafka
+    restart: always
+    depends_on:
+      - zookeeper
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://:9092
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork: {}
+
+  

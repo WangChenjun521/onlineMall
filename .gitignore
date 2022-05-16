@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+/user-server/target
+.idea
+*.iml
+
+/onlinemart-vue/node_modules/*
+/onlinemart-vue/package-lock.json
+/onlinemart-vue/yarn.lock

@@ -1,0 +1,60 @@
+version: "3"
+services:
+  mysql:
+    build: mysql/
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    ports:
+      - 3306:3306
+    networks:
+      - mynetwork
+
+  user-server:
+    depends_on:
+      - mysql
+    build: user-server/
+    restart: always
+    environment:
+      USERNAME: root
+      PASSWORD: 123456
+      DB_URL: mysql:3306/user
+    ports:
+      - 8085:8085
+    networks:
+      - mynetwork
+
+  onlinemart-vue:
+    depends_on:
+      - user-server
+    build: onlinemart-vue/
+    restart: always
+    ports:
+      - 8080:8080
+    networks:
+      - mynetwork
+
+  onlinemart-backstage:
+    depends_on:
+      - user-server
+    build: onlinemart-backstage/
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - mynetwork
+
+  nginx:
+    depends_on:
+      - user-server
+      - onlinemart-vue
+      - onlinemart-backstage
+      - mysql
+    build: nginx/
+    restart: always
+    ports:
+      - 8082:8082
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork: {}

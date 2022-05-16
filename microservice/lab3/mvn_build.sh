@@ -1,0 +1,1 @@
+cd eureka-server && mvn clean package &&  cd ../gateway &&  mvn clean package && cd ../product-service &&  mvn clean package && cd ../orders-service &&  mvn clean package && cd ../user-service &&  mvn clean package && cd ../cart-service &&  mvn clean package && cd ../collections-service &&  mvn clean package && cd ../
